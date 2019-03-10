@@ -12,6 +12,7 @@ puppeteer.launch({
 	});
 
 	await page.setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 9_0_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13A404 Safari/601.1')
+
 	await page.goto(base_url, {
 		waitUntil: 'networkidle0'
 	});
@@ -32,38 +33,34 @@ puppeteer.launch({
 		}
 	});
 	//
-	const title = await page.evaluate(() => {
+	console.log(categories)
+	/*
+	const result = await page.evaluate(() => {
 		try {
-			return Array.from(document.querySelectorAll('a.a-link-normal'))
-				.map(productUrl => productUrl.innerText.trim())
-		} catch (err) {
-			reject(err.toString());
-		}
-	});
-	//
-	const productUrl = await page.evaluate(() => {
-		try {
-			return Array.from(document.querySelectorAll('a.a-link-normal'))
-				.map(productUrl => productUrl.pathname.trim())
-		} catch (err) {
-			reject(err.toString());
-		}
-	});
-	//
-	const productImages = await page.evaluate(() => {
-		try {
-			return Array.from(document.querySelectorAll('.a-dynamic-image.p13n-sc-dynamic-image'))
-				.map(productImages => productImages.src)
+			var data = [];
+			$('h3.loop__post-title').each(function () {
+				const url = $(this).find('a').attr('href');
+				const title = $(this).find('a').attr('title')
+				data.push({
+					'title': title,
+					'url': url
+				});
+			});
+			return data; // Return our data array
 		} catch (err) {
 			reject(err.toString());
 		}
 	});
 
-	console.log({
-		categories: categories,
-		title: title,
-		productUrl: productUrl,
-		productImages: productImages
-	});
+		// let's close the browser
+		await browser.close();
 
+		// ok, let's log blog titles...
+		for (var i = 0; i < result.length; i++) {
+			console.log('Post: ' + result[i].title + ' URL: ' + result[i].url);
+		}
+		process.exit();
+	}).catch(function (error) {
+		console.error('No way Paco!');
+		process.exit();*/
 });
