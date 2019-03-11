@@ -32,9 +32,8 @@ puppeteer
 			waitNetworkIdle: true // defaults to false
 		});
 
-		await page.waitForSelector("div#zg_col1");
+		console.log("Page load complete...scraping");
 
-		console.log("Hi there!");
 		//
 		const productInfo = await page.evaluate(() => {
 			try {
