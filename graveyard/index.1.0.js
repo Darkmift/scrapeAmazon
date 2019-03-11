@@ -28,20 +28,32 @@ puppeteer
 		});
 
 		await page.goto(base_url, {
-			waitLoad: true,
-			waitNetworkIdle: true // defaults to false
+			waitUntil: "networkidle0"
 		});
 
 		await page.waitForSelector("div#zg_col1");
+		await page.addScriptTag({
+			url: "https://code.jquery.com/jquery-3.2.1.min.js"
+		});
 
 		console.log("Hi there!");
 		//
+		const categories = await page.evaluate(() => {
+			try {
+				return Array.from(document.querySelectorAll("ul#zg_browseRoot li")).map(
+					categories => categories.innerText.trim()
+				);
+			} catch (err) {
+				reject(err.toString());
+			}
+		});
+		//
 		const productInfo = await page.evaluate(() => {
 			try {
-				return Array.from(document.querySelectorAll('div.zg_homeListLink a')).map(
+				return Array.from(document.querySelectorAll("a.a-link-normal")).map(
 					product => ({
-						title: product.text,
-						url: product.href
+						title: product.pathname.trim(),
+						url: product.pathname.trim()
 					})
 				);
 			} catch (err) {
@@ -49,8 +61,19 @@ puppeteer
 			}
 		});
 
+		const productImages = await page.evaluate(() => {
+			try {
+				return Array.from(
+					document.querySelectorAll(".a-dynamic-image.p13n-sc-dynamic-image")
+				).map(productImages => productImages.src);
+			} catch (err) {
+				reject(err.toString());
+			}
+		});
 
 		console.log({
+			categories: categories,
+			productImages: productImages,
 			productInfo: productInfo
 		});
 	});
