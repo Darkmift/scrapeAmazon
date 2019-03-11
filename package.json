@@ -1,0 +1,22 @@
+{
+  "name": "scrapeamazon",
+  "version": "1.2.4",
+  "description": "scraping study with puppeteer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Darkmift/scrapeAmazon.git"
+  },
+  "author": "Avi E.Koenig & Moshe Kessler",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Darkmift/scrapeAmazon/issues"
+  },
+  "homepage": "https://github.com/Darkmift/scrapeAmazon#readme",
+  "dependencies": {
+    "puppeteer": "^1.13.0"
+  }
+}
