@@ -1,6 +1,4 @@
 const puppeteer = require("puppeteer");
-const cheerio = require("cheerio");
-
 const base_url = "https://www.amazon.com/gp/bestsellers/";
 
 puppeteer
@@ -43,7 +41,6 @@ puppeteer
 					product => ({
 						title: product.text,
 						url: product.href
-						// url: product.href.split('/').slice(0,4).join('/')
 					})
 				);
 			} catch (err) {
@@ -62,35 +59,47 @@ puppeteer
 
 			await page.goto(productInfo[i].url, {
 				waitLoad: true,
-				waitNetworkIdle: true
+				waitNetworkIdle: true // defaults to false
 			});
 			await page.addScriptTag({
 				url: 'https://code.jquery.com/jquery-3.2.1.min.js'
 			})
 
+			/*
+			itelmlist = document.querySelectorAll('ol#zg-ordered-list > li > span > div > span')[0].children[0].innerHTML
+			*/
 			let productList = {};
-
-			await page.content();
 			const itemList = await page.evaluate(() => {
-				return document.querySelector('ul');
+				try {
+					return $('#zg-ordered-list');
+				} catch (err) {
+					reject(err.toString());
+				}
 			});
 
-			const data = await page.content();
+			// const itemList = await page.$$('#zg-ordered-list');
 
-			const ul = await page.evaluate(() => {
-				let elements = Array.from(document.querySelectorAll('ul.a-unordered-list > li > span')).map(el => el.innerHTML);
-				return elements;
-			}, 'ul');
+			// const itemList = await page.$eval(selector, (element) => {
+			// 	return element.innerHTML
+			// })
 
-			console.log('itemList: ', ul)
+			// const itemList = await page.$$eval('ol#zg-ordered-list',el=>el.children);
+
+			console.log('length: ', itemList)
+			//loop over each li on inner page
+			// for (let j = 0; j < itemList.length; j++) {
+			// 	const item = await itemList[i].$eval('h2', (h2) => h2.innerText);
+			// 	productList[j] = item;
+			// }
 
 			console.log({
 				notice: `iteration ${i} in ${productInfo[i].title}`,
+				// productList: productList.length
 			})
 
 			await page.goto(base_url, {
 				waitLoad: true,
-				waitNetworkIdle: true
+				waitNetworkIdle: true // defaults to false
 			});
 
 		}
